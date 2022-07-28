@@ -32,14 +32,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.3.1_msvc2019_64</QtInstall>
-    <QtModules>
-    </QtModules>
+    <QtModules>core</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.3.1_msvc2019_64</QtInstall>
-    <QtModules>
-    </QtModules>
+    <QtModules>core</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -89,7 +87,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Decks.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Phrase.cpp" />
+    <ClCompile Include="Phrases.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Phrase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Phrases.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Decks.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
