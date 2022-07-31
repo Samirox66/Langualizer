@@ -1,31 +1,38 @@
 #pragma once
+#include <QtCore/qobject.h>
+#include <QtCore/qstring.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qscrollarea.h>
 
-#include "qobject.h"
-#include "QtCore/qstring.h"
-#include "QtWidgets/qlabel.h"
-#include "QtWidgets/qtextedit.h"
-#include "QtWidgets/qboxlayout.h"
-#include "QtWidgets/qwidget.h"
-#include "QtWidgets/qpushbutton.h"
+#include "Language.h"
 
+#include <list>
 #include <map>
+#include <algorithm>
 
-class Phrase  : public QObject
+class Phrase : public QObject
 {
 	Q_OBJECT
 public slots:
-	void DeleteSlot();
+	void AddLangSlot(const QString& lang);
+	void DeleteLangSlot(const QString& lang);
 signals:
-	void DeleteSignal(const QString&);
+
 public:
-	Phrase(QString lang);
+	Phrase();
 	QWidget* GetWidget();
-	QString GetLanguage();
+	std::string GetPhraseOutputString();
 private:
-	QString language;
-	QLabel* langLabel;
-	QTextEdit* textEdit;
-	QVBoxLayout* layout;
-	QPushButton* deleteBtn;
+	QComboBox* addingLangBtn;
+	QPushButton* editBtn;
+	QHBoxLayout* layout;
+	QHBoxLayout* phraseLayout;
+	QWidget* phraseWidget;
 	QWidget* widget;
+	QScrollArea* scrollArea;
+	std::list<std::unique_ptr<Language>> pLanguages;
+	std::map<QString, bool> langs;
 };
+

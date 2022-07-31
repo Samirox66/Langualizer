@@ -26,21 +26,33 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Phrase.cpp">
+    <ClCompile Include="Language.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Phrases.cpp">
+    <ClCompile Include="Phrase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Decks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Phrases.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Phrase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Language.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="Phrases.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Phrase.h">
+    <QtMoc Include="App.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Decks.h">

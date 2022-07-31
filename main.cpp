@@ -1,20 +1,18 @@
-#include "QtWidgets/qapplication.h"
-#include "QtWidgets/qwidget.h"
-#include "QtWidgets/qboxlayout.h"
-#include "Phrases.h"
-
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qwidget.h>
 #pragma comment(lib, "Qt6Widgetsd.lib")
+
+#include "App.h"
 
 int main(int argc, char** argv)
 {
 	QApplication app(argc, argv);
 	QWidget window;
-	Phrases phrases;
-	QGridLayout* layout = new QGridLayout;
-	layout->addWidget(phrases.GetWidget());
-	window.setLayout(layout);
+	App application;
+	
+	window.setLayout(application.GetLayout());
 
-	window.resize(400, 200);
+	window.resize(800, 400);
 	window.show();
 
 	return app.exec();

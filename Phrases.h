@@ -1,32 +1,36 @@
 #pragma once
-#include "qobject.h"
-#include "qstring.h"
-#include "QtWidgets/qboxlayout.h"
-#include "QtWidgets/qpushbutton.h"
-#include "QtWidgets/qcombobox.h"
+#include <QtCore/qobject.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qwidget.h>
+#include <QtCore/qstring.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qscrollarea.h>
 
 #include "Phrase.h"
 
-#include <list>
-#include <map>
-#include <algorithm>
+#include <vector>
 
 class Phrases : public QObject
 {
 	Q_OBJECT
 public slots:
-	void AddLangSlot(const QString& lang);
-	void DeleteLangSlot(const QString& lang);
-signals:
-
+	void AddPhraseSlot();
+	signals:
 public:
-	Phrases();
+	Phrases(const QString& deck);
 	QWidget* GetWidget();
+	std::string GetPhraseOutputString();
 private:
-	QComboBox* addingLangButton;
-	QHBoxLayout* layout;
+	QPushButton* addPhraseBtn;
+	QLabel* deckLabel;
 	QWidget* widget;
-	std::list<std::unique_ptr<Phrase>> phrases;
-	std::map<QString, std::pair<int, bool>> langs;
+	QWidget* phrasesWidget;
+	QVBoxLayout* layout;
+	QVBoxLayout* phrasesLayout;
+	QScrollArea* scrollArea;
+	const QString deckName;
+	std::vector<std::unique_ptr<Phrase>> phrases;
 };
 

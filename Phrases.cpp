@@ -1,70 +1,55 @@
 #include "Phrases.h"
 
-Phrases::Phrases()
+Phrases::Phrases(const QString& deck) : deckName(deck)
 {
-	layout = new QHBoxLayout();
-	addingLangButton = new QComboBox;
+	layout = new QVBoxLayout;
 	widget = new QWidget;
+	deckLabel = new QLabel(deck);
+	addPhraseBtn = new QPushButton("Add phrase");
+	scrollArea = new QScrollArea;
+	phrasesLayout = new QVBoxLayout;
+	phrasesWidget = new QWidget;
+	phrases.push_back(std::make_unique<Phrase>());
 
-	langs["Russian"] = std::make_pair(1, true);
-	langs["Azerbaijani"] = std::make_pair(2, true);
-	langs["English"] = std::make_pair(3, true);
-	langs["Spanish"] = std::make_pair(4, true);
+	deckLabel->setAlignment(Qt::AlignCenter);
+	addPhraseBtn->setMaximumWidth(200);
+	addPhraseBtn->setMinimumWidth(100);
 
-	addingLangButton->addItem("Choose language");
-	for (auto& lang : langs)
-	{
-		addingLangButton->addItem(lang.first);
-	}
-	QObject::connect(addingLangButton, SIGNAL(currentTextChanged(const QString&)), SLOT(AddLangSlot(const QString&)));
+	QObject::connect(addPhraseBtn, SIGNAL(clicked()), SLOT(AddPhraseSlot()));
 
-	layout->addWidget(addingLangButton);
-	widget->setLayout(layout);
-}
-
-void Phrases::AddLangSlot(const QString& lang)
-{
-	if (lang != "Choose language")
-	{
-		langs[lang] = std::make_pair(-1, false);
-		auto phrase = std::make_unique<Phrase>(lang);
-		QObject::connect(phrase.get(), SIGNAL(DeleteSignal(const QString&)), SLOT(DeleteLangSlot(const QString&)));
-		layout->addWidget(phrase->GetWidget());
-		phrases.push_back(std::move(phrase));
-		int index = addingLangButton->findText(lang);
-		addingLangButton->blockSignals(true);
-		addingLangButton->removeItem(index);
-		addingLangButton->setCurrentIndex(0);
-		addingLangButton->blockSignals(false);
-		for (auto& language : langs)
-		{
-			if (language.second.second && language.second.first > langs[lang].first)
-			{
-				language.second.first--;
-			}
-		}
-	}
-}
-
-void Phrases::DeleteLangSlot(const QString& lang)
-{
-	int availableLangs = std::count_if(langs.begin(), langs.end(), [](std::pair<const QString, std::pair<int, bool>>& x) { return x.second.second; });
-	langs[lang] = std::make_pair(availableLangs + 1, true);
-	addingLangButton->addItem(lang);
-	/*std::list<std::unique_ptr<Phrase>>::const_iterator iter = std::move(std::find_if(phrases.begin(), phrases.end(), [&lang](std::unique_ptr<Phrase> phrase) { return phrase->GetLanguage() == lang; }));
-	phrases.erase(iter);
-	layout->removeWidget(iter->get()->GetWidget());*/
+	phrasesWidget->setLayout(phrasesLayout);
+	scrollArea->setWidgetResizable(true);
+	scrollArea->setWidget(phrasesWidget);
+	layout->addWidget(deckLabel);
+	layout->addWidget(addPhraseBtn);
+	layout->addWidget(scrollArea);
 	for (auto& phrase : phrases)
 	{
-		if (phrase->GetLanguage() == lang)
-		{
-			layout->removeWidget(phrase->GetWidget());
-			delete phrase->GetWidget();
-		}
+		phrasesLayout->addWidget(phrase->GetWidget());
 	}
+
+	widget->setLayout(layout);
 }
 
 QWidget* Phrases::GetWidget()
 {
 	return widget;
+}
+
+std::string Phrases::GetPhraseOutputString()
+{
+	std::string outputStr = "";
+	for (auto& phrase : phrases)
+	{
+		outputStr += phrase->GetPhraseOutputString() + "\n";
+	}
+	
+	return outputStr;
+}
+
+void Phrases::AddPhraseSlot()
+{
+	auto newPhrase = std::make_unique<Phrase>();
+	phrasesLayout->addWidget(newPhrase->GetWidget());
+	phrases.push_back(std::move(newPhrase));
 }
