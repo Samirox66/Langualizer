@@ -4,6 +4,7 @@
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qwidget.h>
 #include <QtWidgets/qscrollarea.h>
+#include <QtWidgets/qlineedit.h>
 
 #include <vector>
 
@@ -24,16 +25,21 @@ class Decks : public QObject
 {
 	Q_OBJECT
 public slots:
-	
+	void AddDeckSlot();
 signals:
 	
 public:
 	Decks(class App& app);
-	QScrollArea* GetWidget();
+	QWidget* GetWidget();
 private:
 	QScrollArea* scrollArea;
+	QWidget* scrollWidget;
 	QWidget* widget;
 	QVBoxLayout* layout;
+	QVBoxLayout* scrollLayout;
+	QPushButton* addDeckBtn;
+	QLineEdit* newDeckEdit;
+	class App* pApp;
 	std::vector<std::unique_ptr<DeckPushButton>> decks;
 };
 
