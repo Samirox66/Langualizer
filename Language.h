@@ -19,7 +19,8 @@ public slots:
 signals:
 	void DeleteSignal(const QString&);
 public:
-	Language(QString lang);
+	Language(const QString& lang, const QString& phrase);
+	Language(const QString& lang);
 	QWidget* GetWidget();
 	QString GetLanguage();
 	std::string GetPhraseOutputString();

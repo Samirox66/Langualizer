@@ -1,12 +1,19 @@
 #include "Language.h"
 
-Language::Language(QString lang) : language(lang)
+Language::Language(const QString& lang, const QString& phrase) : Language(lang)
+{
+	textEdit->setText(phrase);
+	textEdit->setEnabled(false);
+}
+
+Language::Language(const QString& lang) : language(lang)
 {
 	layout = new QVBoxLayout;
-	langLabel = new QLabel(lang);
+	langLabel = new QLabel(language);
 	textEdit = new QTextEdit;
 	widget = new QWidget;
 	deleteBtn = new QPushButton("Delete");	
+
 	QObject::connect(deleteBtn, SIGNAL(clicked()), SLOT(DeleteSlot()));
 
 	widget->setFixedHeight(150);
@@ -33,7 +40,7 @@ QString Language::GetLanguage()
 
 std::string Language::GetPhraseOutputString()
 {
-	return language.toStdString() + " " + textEdit->toPlainText().toStdString() + " ";
+	return "~" + language.toStdString() + " " + textEdit->toPlainText().toStdString() + " ";
 }
 
 void Language::DeleteSlot()

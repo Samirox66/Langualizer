@@ -19,7 +19,9 @@ public slots:
 	void AddPhraseSlot();
 	signals:
 public:
-	Phrases(const QString& deck);
+	Phrases(const QString& deckName);
+	Phrases(const QString& deckName, std::vector<std::string>& deckPhrasesStr);
+	void Init();
 	QWidget* GetWidget();
 	std::string GetPhraseOutputString();
 private:
@@ -33,4 +35,3 @@ private:
 	const QString deckName;
 	std::vector<std::unique_ptr<Phrase>> phrases;
 };
-

@@ -2,14 +2,38 @@
 
 Phrases::Phrases(const QString& deck) : deckName(deck)
 {
+	Init();
+	phrases.push_back(std::make_unique<Phrase>());
+
+	for (auto& phrase : phrases)
+	{
+		phrasesLayout->addWidget(phrase->GetWidget());
+	}
+}
+
+Phrases::Phrases(const QString& deckName, std::vector<std::string>& deckPhrasesStr) : deckName(deckName)
+{
+	Init();
+	for (auto& phraseStr : deckPhrasesStr)
+	{
+		phrases.push_back(std::make_unique<Phrase>(phraseStr));
+	}
+
+	for (auto& phrase : phrases)
+	{
+		phrasesLayout->addWidget(phrase->GetWidget());
+	}
+}
+
+void Phrases::Init()
+{
 	layout = new QVBoxLayout;
 	widget = new QWidget;
-	deckLabel = new QLabel(deck);
+	deckLabel = new QLabel(deckName);
 	addPhraseBtn = new QPushButton("Add phrase");
 	scrollArea = new QScrollArea;
 	phrasesLayout = new QVBoxLayout;
 	phrasesWidget = new QWidget;
-	phrases.push_back(std::make_unique<Phrase>());
 
 	deckLabel->setAlignment(Qt::AlignCenter);
 	addPhraseBtn->setMaximumWidth(200);
@@ -23,10 +47,6 @@ Phrases::Phrases(const QString& deck) : deckName(deck)
 	layout->addWidget(deckLabel);
 	layout->addWidget(addPhraseBtn);
 	layout->addWidget(scrollArea);
-	for (auto& phrase : phrases)
-	{
-		phrasesLayout->addWidget(phrase->GetWidget());
-	}
 
 	widget->setLayout(layout);
 }

@@ -22,17 +22,21 @@ signals:
 
 public:
 	Phrase();
+	Phrase(const std::string& phraseStr);
+	void Init();
 	QWidget* GetWidget();
 	std::string GetPhraseOutputString();
 private:
 	QComboBox* addingLangBtn;
 	QPushButton* editBtn;
+	QPushButton* deleteBtn;
 	QHBoxLayout* layout;
 	QHBoxLayout* phraseLayout;
+	QVBoxLayout* buttonsLayout;
 	QWidget* phraseWidget;
+	QWidget* buttonsWidget;
 	QWidget* widget;
 	QScrollArea* scrollArea;
 	std::list<std::unique_ptr<Language>> pLanguages;
 	std::map<QString, bool> langs;
 };
-

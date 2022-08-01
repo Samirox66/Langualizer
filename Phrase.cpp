@@ -2,13 +2,82 @@
 
 Phrase::Phrase()
 {
+	Init();
+	for (auto& lang : langs)
+	{
+		addingLangBtn->addItem(lang.first);
+	}
+}
+
+Phrase::Phrase(const std::string& phraseStr)
+{
+	Init();
+	std::map<QString, QString> phraseMap;
+	std::vector<std::string> words;
+	std::istringstream iss(phraseStr);
+	std::copy(std::istream_iterator<std::string>(iss),
+		std::istream_iterator<std::string>(),
+		std::back_inserter<std::vector<std::string>>(words));
+	QString lang = "";
+	QString phraseInLang = "";
+	for (auto& word : words)
+	{
+		if (word.at(0) == '~' && lang != "")
+		{
+			phraseMap[lang] = phraseInLang;
+			lang = "";
+			phraseInLang = "";
+		}
+		if (lang == "")
+		{
+			lang = QString::fromStdString(word.substr(1, word.size() - 1));
+		}
+		else
+		{
+			if (phraseInLang != "")
+			{
+				phraseInLang += " ";
+			}
+			phraseInLang += QString::fromStdString(word);
+		}
+	}
+
+	if (lang != "" && phraseInLang != "")
+	{
+		phraseMap[lang] = phraseInLang;
+	}
+
+	for (auto& phrasePair : phraseMap)
+	{
+		langs[phrasePair.first] = false;
+		auto phrase = std::make_unique<Language>(phrasePair.first, phrasePair.second);
+		QObject::connect(phrase.get(), SIGNAL(DeleteSignal(const QString&)), SLOT(DeleteLangSlot(const QString&)));
+		QObject::connect(editBtn, SIGNAL(toggled(bool)), phrase.get(), SLOT(ChangeEditability(bool)));
+		phraseLayout->addWidget(phrase->GetWidget());
+		pLanguages.push_back(std::move(phrase));
+	}
+	
+	for (auto& lang : langs)
+	{
+		if (lang.second)
+		{
+			addingLangBtn->addItem(lang.first);
+		}
+	}
+}
+
+void Phrase::Init()
+{
 	layout = new QHBoxLayout();
 	addingLangBtn = new QComboBox;
 	widget = new QWidget;
 	phraseWidget = new QWidget;
+	buttonsWidget = new QWidget;
 	scrollArea = new QScrollArea;
 	phraseLayout = new QHBoxLayout;
+	buttonsLayout = new QVBoxLayout;
 	editBtn = new QPushButton("Edit");
+	deleteBtn = new QPushButton("Delete");
 	editBtn->setCheckable(true);
 	editBtn->setStyleSheet("QPushButton{background-color:green;}");
 
@@ -18,21 +87,18 @@ Phrase::Phrase()
 	langs["Spanish"] = true;
 
 	addingLangBtn->addItem("Choose language");
-	for (auto& lang : langs)
-	{
-		addingLangBtn->addItem(lang.first);
-	}
 	QObject::connect(addingLangBtn, SIGNAL(currentTextChanged(const QString&)), SLOT(AddLangSlot(const QString&)));
-
-	widget->setFixedHeight(200);
-
-
-	phraseWidget->setLayout(phraseLayout);
 	scrollArea->setWidgetResizable(true);
+
+	buttonsLayout->addWidget(addingLangBtn);
+	buttonsLayout->addWidget(editBtn);
+	buttonsLayout->addWidget(deleteBtn);
+	widget->setFixedHeight(200);
+	phraseWidget->setLayout(phraseLayout);
+	buttonsWidget->setLayout(buttonsLayout);
 	scrollArea->setWidget(phraseWidget);
-	layout->addWidget(addingLangBtn);
+	layout->addWidget(buttonsWidget);
 	layout->addWidget(scrollArea);
-	layout->addWidget(editBtn);
 	widget->setLayout(layout);
 }
 

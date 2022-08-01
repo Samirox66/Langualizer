@@ -28,4 +28,5 @@ private:
 	QGridLayout* layout;
 	Decks decks;
 	std::map<QString, std::unique_ptr<Phrases>> decksMap;
+	QString currentDeck;
 };
