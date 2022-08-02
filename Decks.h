@@ -31,6 +31,7 @@ signals:
 public:
 	Decks(class App& app);
 	QWidget* GetWidget();
+	void ReadDecks();
 private:
 	QScrollArea* scrollArea;
 	QWidget* scrollWidget;

@@ -13,10 +13,7 @@ Decks::Decks(App& app)
 	newDeckEdit = new QLineEdit;
 	scrollArea->setMaximumWidth(170);
 	scrollArea->setWidgetResizable(true);
-	decks.push_back(std::make_unique<DeckPushButton>("Hobbies"));
-	decks.push_back(std::make_unique<DeckPushButton>("Introduction"));
-	decks.push_back(std::make_unique<DeckPushButton>("Books"));
-	decks.push_back(std::make_unique<DeckPushButton>("Series"));
+	ReadDecks();
 	for (auto& deck : decks)
 	{
 		QObject::connect(deck.get(), SIGNAL(clicked()), deck.get(), SLOT(DeckClickSlot()));
@@ -42,14 +39,49 @@ QWidget* Decks::GetWidget()
 	return widget;
 }
 
+void Decks::ReadDecks()
+{
+	std::string filename = "decks/decks.txt";
+	std::ifstream decksFile;
+	decksFile.open(filename);
+	if (decksFile.is_open())
+	{
+		std::string deck;
+		while (std::getline(decksFile, deck))
+		{
+			decks.push_back(std::make_unique<DeckPushButton>(QString::fromStdString(deck)));
+		}
+
+		decksFile.close();
+	}
+}
+
 void Decks::AddDeckSlot()
 {
-	if (newDeckEdit->text() == "")
+	QString newDeckStr = newDeckEdit->text();
+	if (newDeckStr == "")
 	{
 		return;
 	}
 
-	auto newDeck = std::make_unique<DeckPushButton>(newDeckEdit->text());
+	for (auto& deck : decks)
+	{
+		if (deck->text() == newDeckStr)
+		{
+			return;
+		}
+	}
+
+	std::string filename = "decks/decks.txt";
+	std::ofstream decksFile;
+	decksFile.open(filename, std::ios::app);
+	if (decksFile.is_open())
+	{
+		decksFile << newDeckStr.toStdString() << std::endl;
+		decksFile.close();
+	}
+
+	auto newDeck = std::make_unique<DeckPushButton>(newDeckStr);
 	scrollLayout->addWidget(newDeck.get());
 	QObject::connect(newDeck.get(), SIGNAL(clicked()), newDeck.get(), SLOT(DeckClickSlot()));
 	QObject::connect(newDeck.get(), SIGNAL(DeckClickSignal(const QString&)), pApp, SLOT(ReadDeck(const QString&)));
