@@ -7,7 +7,7 @@ decks/
 plugins/
 forExe/
 *.sln
-*.vcxproj
+*.vcxproj.user
 *.vcxproj.filters
 
 # User-specific files
