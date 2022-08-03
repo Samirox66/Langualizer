@@ -11,6 +11,7 @@
 #include <list>
 #include <map>
 #include <algorithm>
+#include <sstream>
 
 class Phrase : public QObject
 {

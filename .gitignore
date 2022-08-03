@@ -4,6 +4,11 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 decks/
+plugins/
+forExe/
+*.sln
+*.vcxproj
+*.vcxproj.filters
 
 # User-specific files
 *.rsuser
